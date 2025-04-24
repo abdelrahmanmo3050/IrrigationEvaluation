@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irrigation System Evaluation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EED3B1;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1F4529;
+            font-weight: bolder;
+            font-family: "Playfair Display", serif;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 94%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #47663B;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bolder;
+        }
+
+        button:hover {
+            background-color: #8EB486;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        #uniformityResult, #distributionResult {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .blue {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .green {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .red {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        
+        .sensor-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .sensor-box {
+            width: 25%;
+            text-align: center;
+            padding: 5px;
+            background: #FFFF;
+            border-radius: 4px;
+        }
+        
+        .sensor-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        #sensor1, #sensor2, #sensor3 {
+            padding-left: 25px;
+        }
+        
+        .container-group {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .auto-fill-group {
+            margin-top: 10px;
+        }
+
+        /* Carousel and container positioning */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Allows clicks to pass through to carousel */
+            z-index: 2;
+            margin-top: 20px;
+        }
+
+        .container1 {
+            background-color: #EED3B1;
+            
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            color: #1F4529;
+            font-weight: bolder;
+            font-family: "Playfair Display", serif;
+            text-align: center;
+            max-height: 80%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            pointer-events: auto; /* Re-enable clicks for the container */
+            margin: 20px;
+            box-shadow: 0 0 20px #47663B;
+
+        }
+img{
+    opacity: 0.8;
+}
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container1 {
+                width: 80%;
+                max-width: 100%;
+                margin: 10px;
+                max-height: 80%;
+            }
+            
+         
+            
+            .sensor-box {
+                width: 30%;
+                margin-bottom: 10px;
+            }
+            img{
+                height: 100%
+               
+            }
+        }
+        
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="carousel-wrapper">
+        <!-- Carousel -->
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="irrigation-evaluation.jpg" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="Image-3-copy.jpg" alt="Second slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="Capture.PNG" alt="Third slide">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        
+        <!-- Content overlay -->
+        <div class="content-overlay">
+            <div class="container1">
+                <h1>Irrigation System Evaluation</h1>
+                
+                <!-- Sensor Display Section -->
+                <div class="sensor-container">
+                    <div class="sensor-box">
+                        <div>Sensor 1</div>
+                        <div class="sensor-value" id="sensor1">--</div>
+                    </div>
+                    <div class="sensor-box">
+                        <div>Sensor 2</div>
+                        <div class="sensor-value" id="sensor2">--</div>
+                    </div>
+                    <div class="sensor-box">
+                        <div>Sensor 3</div>
+                        <div class="sensor-value" id="sensor3">--</div>
+                    </div>
+                </div>
+                
+                <form id="evaluationForm">
+                    <label for="numContainers">Number of Cans:</label>
+                    <input type="number" id="numContainers" name="numContainers" required min="1">
+        
+                    <label for="canDiameter">Can Diameter:</label>
+                    <input type="number" id="canDiameter" name="canDiameter">
+        
+                    <label for="sprinklerDischarge">Sprinkler Discharge:</label>
+                    <input type="number" id="sprinklerDischarge" name="sprinklerDischarge">
+        
+                    <label for="smXsl">Sm x SL:</label>
+                    <input type="number" id="smXsl" name="smXsl">
+                    <label for="time">Irrigation Time:</label>
+                    <input type="number" id="time" name="time">
+        
+                    <div id="status">State: Ready</div>
+        
+                    <button type="button" id="start-pump" onclick="startIrrigation()">
+                        Start Pump
+                    </button>
+                    <br><br>
+                    <div id="containerInputs"></div>
+                    
+                    <button type="button" onclick="calculate()">Calculate</button>
+                </form>
+                
+                <div id="results">
+                    <h2>Results:</h2>
+                    <p id="uniformityResult"></p>
+                    <p id="distributionResult"></p>
+                    <p id="Ea"></p>
+                    <p id="PLEQ"></p>
+                    <p id="E"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Mock sensor values (you can update these manually or connect to real sensors)
+        let sensorValues = {
+            sensor1: 10,
+            sensor2: 12,
+            sensor3: 8
+        };
+        
+        // Initialize sensor displays with mock values
+        document.getElementById('sensor1').textContent = sensorValues.sensor1;
+        document.getElementById('sensor2').textContent = sensorValues.sensor2;
+        document.getElementById('sensor3').textContent = sensorValues.sensor3;
+        
+        document.getElementById('numContainers').addEventListener('input', function() {
+            const numContainers = parseInt(this.value);
+            const containerInputs = document.getElementById('containerInputs');
+            containerInputs.innerHTML = ''; // Clear existing containers
+            
+            // Create groups of 3 containers with one auto-fill button per group
+            for (let group = 0; group < Math.ceil(numContainers / 3); group++) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'container-group';
+                
+                // Add containers for this group (up to 3)
+                const containersInGroup = Math.min(3, numContainers - (group * 3));
+                for (let i = 1; i <= containersInGroup; i++) {
+                    const containerNum = (group * 3) + i;
+                    
+                    const containerDiv = document.createElement('div');
+                    containerDiv.style.marginBottom = '10px';
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `container${containerNum}`;
+                    label.textContent = `Container ${containerNum} Depth:`;
+                    
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = `container${containerNum}`;
+                    input.className = 'containerInput';
+                    input.required = true;
+                    input.style.width = '94%';
+                    
+                    containerDiv.appendChild(label);
+                    containerDiv.appendChild(input);
+                    groupDiv.appendChild(containerDiv);
+                }
+                
+                // Add auto-fill button for this group if there are containers
+                if (containersInGroup > 0) {
+                    const autoFillBtn = document.createElement('button');
+                    autoFillBtn.type = 'button';
+                    autoFillBtn.textContent = `Auto-fill Group ${group + 1} (Containers ${group * 3 + 1}-${group * 3 + containersInGroup})`;
+                    autoFillBtn.className = 'auto-fill-group';
+                    autoFillBtn.onclick = function() { autoFillContainerGroup(group); };
+                    groupDiv.appendChild(autoFillBtn);
+                }
+                
+                containerInputs.appendChild(groupDiv);
+            }
+        });
+        
+        function autoFillContainerGroup(groupIndex) {
+            // Fill all containers in this group with corresponding sensor values
+            const startContainer = groupIndex * 3 + 1;
+            const endContainer = startContainer + 2;
+            
+            for (let i = startContainer; i <= endContainer; i++) {
+                const containerInput = document.getElementById(`container${i}`);
+                if (containerInput) {
+                    const sensorNum = (i - 1) % 3 + 1; // 1, 2, or 3
+                    containerInput.value = document.getElementById(`sensor${sensorNum}`).textContent;
+                }
+            }
+        }
+        
+        function startIrrigation() {
+            const duration = document.getElementById('time').value;
+            if (duration > 0) {
+                document.getElementById('status').innerHTML = `Irrigation started for ${duration} minutes`;
+                // Here you would normally send this to your irrigation system
+            } else {
+                alert('Please enter a valid irrigation time');
+            }
+        }
+        
+        function calculate() {
+            const containerInputs = document.querySelectorAll('.containerInput');
+            const depths = Array.from(containerInputs).map(input => parseFloat(input.value));
+            const canDiameter = parseFloat(document.getElementById('canDiameter').value);
+            const sprinklerDischarge = parseFloat(document.getElementById('sprinklerDischarge').value);
+            const smXsl = parseFloat(document.getElementById('smXsl').value);
+            const time = parseFloat(document.getElementById('time').value);
+            
+            // Validation
+            if (depths.some(isNaN)) {
+                alert('Please fill all container depths correctly.');
+                return;
+            }
+            else if(isNaN(sprinklerDischarge)) {
+                alert('please fill Sprinkler Discharge');
+                return;
+            }
+            else if(isNaN(canDiameter)) {
+                alert('please fill Can Diameter');
+                return;
+            }
+            else if(isNaN(smXsl)) {
+                alert('please fill sm x sl');
+                return;
+            }
+            else if(isNaN(time)) {
+                alert('please fill Irrigation Time');
+                return;
+            }
+        
+            const averageDepth = depths.reduce((sum, depth) => sum + depth, 0) / depths.length;
+        
+            // Cu Calculation
+            const uniformity = 1 - (depths.reduce((sum, depth) => sum + Math.abs(depth - averageDepth), 0) / (depths.length * averageDepth));
+            const uniformityPercentage = (uniformity * 100).toFixed(2);
+        
+            let uniformityText = '';
+            let uniformityClass = '';
+            if (uniformityPercentage >= 90) {
+                uniformityText = `Uniformity: ${uniformityPercentage}% - Excellent (Blue)`;
+                uniformityClass = 'blue';
+            } else if (uniformityPercentage >= 80) {
+                uniformityText = `Uniformity: ${uniformityPercentage}% - Acceptable (Green)`;
+                uniformityClass = 'green';
+            } else {
+                uniformityText = `Uniformity: ${uniformityPercentage}% - Unacceptable (Red)`;
+                uniformityClass = 'red';
+            }
+        
+            document.getElementById('uniformityResult').innerText = uniformityText;
+            document.getElementById('uniformityResult').className = uniformityClass;
+        
+            // Du in Lower Quarter Calculation
+            const sortedDepths = [...depths].sort((a, b) => a - b);
+            const quarterLength = Math.ceil(sortedDepths.length / 4);
+            const lowestQuarterDepths = sortedDepths.slice(0, quarterLength);
+            const averageLowestQuarter = lowestQuarterDepths.reduce((sum, depth) => sum + depth, 0) / lowestQuarterDepths.length;
+            const distributionRatio = (averageLowestQuarter / averageDepth) * 100;
+        
+            let distributionText = '';
+            let distributionClass = '';
+            if (distributionRatio >= 80) {
+                distributionText = `Distribution: ${distributionRatio.toFixed(2)}% - Excellent (Blue)`;
+                distributionClass = 'blue';
+            } else if (distributionRatio >= 67) {
+                distributionText = `Distribution: ${distributionRatio.toFixed(2)}% - Good (Green)`;
+                distributionClass = 'green';
+            } else {
+                distributionText = `Distribution: ${distributionRatio.toFixed(2)}% - Unacceptable (Red)`;
+                distributionClass = 'red';
+            }
+        
+            document.getElementById('distributionResult').innerText = distributionText;
+            document.getElementById('distributionResult').className = distributionClass;
+            
+            // Additional Calculations
+            let area = (3.1416/4) * Math.pow(canDiameter, 2);
+            let appliedDepth = sprinklerDischarge * time / smXsl;
+            let ra = sprinklerDischarge / smXsl;
+            let averageCanDepth = averageDepth / area;
+        
+            let Ea = (averageCanDepth * 100) / appliedDepth;
+            document.getElementById('Ea').innerText = `Application Efficiency: ${Ea.toFixed(2)}%`;
+            
+            let PLEQ = (averageLowestQuarter * 100) / (area * appliedDepth);
+            document.getElementById('PLEQ').innerText = `Potential Low Quarter Efficiency: ${PLEQ.toFixed(2)}%`;
+            
+            let E = (1 - Ea/100) * 100;
+            document.getElementById('E').innerText = `Loss Efficiency: ${E.toFixed(2)}%`;
+        }
+        
+        // Function to update sensor values (you can call this from your sensor reading code)
+        function updateSensorValues(sensor1, sensor2, sensor3) {
+            document.getElementById('sensor1').textContent = sensor1;
+            document.getElementById('sensor2').textContent = sensor2;
+            document.getElementById('sensor3').textContent = sensor3;
+        }
+    </script>
+</body>
+</html>
